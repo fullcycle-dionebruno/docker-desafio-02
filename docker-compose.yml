@@ -1,0 +1,40 @@
+version: "3"
+
+services:
+  database:
+    container_name: database
+    image: mysql:8.2
+    command:
+    restart: always
+    tty: true
+    volumes:
+      - ./database:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: database
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - docker-desafio-02
+
+  backend:
+    container_name: backend
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    image: dionebruno/docker-desafio-02-backend
+    volumes:
+      - .:/home/node/app
+    ports:
+      - 3000:3000
+    networks:
+      - docker-desafio-02
+
+  nginx:
+    container_name: nginx
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    image: dionebruno/docker-desafio-02-nginx
+
+networks:
+  docker-desafio-02:
+    driver: bridge
