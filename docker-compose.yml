@@ -23,17 +23,22 @@ services:
     image: dionebruno/docker-desafio-02-backend
     volumes:
       - .:/home/node/app
-    ports:
-      - 3000:3000
     networks:
       - docker-desafio-02
+    depends_on:
+      - database
 
   nginx:
+    image: nginx:latest
     container_name: nginx
-    build:
-      context: .
-      dockerfile: Dockerfile.nginx
-    image: dionebruno/docker-desafio-02-nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - 8080:80
+    networks:
+      - docker-desafio-02
+    depends_on:
+      - backend
 
 networks:
   docker-desafio-02:
